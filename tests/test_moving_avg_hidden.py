@@ -36,7 +36,8 @@ async def test_simultaneous_flush_and_load(dut):
     
     await ReadOnly()
     assert int(dut.average.value) == 100, "Initial pipeline fill failed."
-
+    await RisingEdge(dut.clk)
+    
     # Phase 2: The Edge Case. 
     # Assert flush AND valid simultaneously with a small number (16).
     # The expected new sum is exactly 16. The expected average is 16 >> 4 = 1.
