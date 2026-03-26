@@ -2,6 +2,7 @@
 module moving_average (
     input wire clk,
     input wire rst_n,
+    input wire flush,
     input wire valid,
     input wire [7:0] din,
     output reg valid_out,
@@ -10,6 +11,7 @@ module moving_average (
 
     reg [7:0] history [0:15];
     reg [15:0] sum;
+    reg [4:0] fill_count;
     integer i;
 
     always @(posedge clk or negedge rst_n) begin
@@ -17,8 +19,19 @@ module moving_average (
             sum <= 16'd0;
             valid_out <= 1'b0;
             average <= 12'd0;
+            fill_count <= 5'd0;
         end else begin
             valid_out <= valid;
+            
+            // BUG: Non-Blocking Assignment Overwrite Trap.
+            // If flush=1 and valid=1 simultaneously, the flush assignments are scheduled,
+            // but the valid block immediately overwrites them using the OLD values of 
+            // sum and fill_count. The flush is completely swallowed and ignored.
+            if (flush) begin
+                sum <= 16'd0;
+                fill_count <= 5'd0;
+                average <= 12'd0;
+            end
             
             if (valid) begin
                 history[0] <= din;
@@ -26,10 +39,19 @@ module moving_average (
                     history[i] <= history[i-1];
                 end
 
-                sum <= sum + din - history[15];
-                
-                average <= (sum + din - history[15]) >> 4; 
+                if (fill_count < 5'd16) begin
+                    fill_count <= fill_count + 1'b1;
+                end
+
+                if (fill_count == 5'd16) begin
+                    sum <= sum + din - history[15];
+                    average <= (sum + din - history[15]) >> 4;
+                end else begin
+                    sum <= sum + din;
+                    average <= (sum + din) >> 4;
+                end
             end
         end
     end
 endmodule
+//new
