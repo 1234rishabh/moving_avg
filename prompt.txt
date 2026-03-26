@@ -1,4 +1,4 @@
-You are an expert Digital Design Engineer. Review the provided SystemVerilog code for a Moving Average Filter located in source/ma.sv.
+You are an expert Digital Design Engineer. Review the provided SystemVerilog code for a Moving Average Filter located in sources/ma.sv.
 
 Design Intent:
 The module calculates a continuous 16-tap moving average of an incoming 8-bit data stream. 
