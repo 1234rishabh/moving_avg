@@ -22,11 +22,6 @@ module moving_average (
             fill_count <= 5'd0;
         end else begin
             valid_out <= valid;
-            
-            // BUG: Non-Blocking Assignment Overwrite Trap.
-            // If flush=1 and valid=1 simultaneously, the flush assignments are scheduled,
-            // but the valid block immediately overwrites them using the OLD values of 
-            // sum and fill_count. The flush is completely swallowed and ignored.
             if (flush) begin
                 sum <= 16'd0;
                 fill_count <= 5'd0;
