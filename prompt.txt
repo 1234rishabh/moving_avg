@@ -1,11 +1,13 @@
-You are an expert Digital Design Engineer. Review the provided SystemVerilog code for a 16-tap Moving Average Filter in sources/ma.sv
+You are an expert Digital Design Engineer. Conduct a standard code review on the provided SystemVerilog RTL for a 16-tap Moving Average Filter present at sources/ma.sv.
 
 Design Specifications:
-- The module accepts an 8-bit input data stream (`din`) qualified by a `valid` signal.
+- The module accepts an 8-bit input data stream (din) qualified by a valid signal.
 - It maintains a running sum of the last 16 valid samples and continuously outputs the average.
-- A synchronous `flush` signal is provided to reset the internal accumulator and pipeline state.
+- A synchronous flush signal is provided to immediately clear the internal accumulator and pipeline state.
+- The flush control must operate reliably under all traffic conditions, including scenarios where a flush is requested mid-stream while valid data is actively arriving.
+
 Task:
-The provided RTL contains a functional bug that causes mathematical corruption during operation.
-1. Identify the defect in the code.
-2. Explain the scenario that triggers this failure.
-3. Provide the corrected Verilog code block.
+1. Perform a thorough architectural and functional review of the RTL against the specifications.
+2. Identify any functional discrepancies, edge-case failures, or coding violations.
+3. Explain the cycle-by-cycle behavior of any identified issues.
+4. Provide the corrected Verilog code blocks if any issues are found.
