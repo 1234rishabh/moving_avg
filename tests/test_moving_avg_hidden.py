@@ -5,7 +5,7 @@ from pathlib import Path
 
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import RisingEdge, ReadOnly
+from cocotb.triggers import RisingEdge, FallingEdge, ReadOnly
 from cocotb_tools.runner import get_runner
 
 @cocotb.test()
@@ -34,23 +34,33 @@ async def test_simultaneous_flush_and_load(dut):
     dut.valid.value = 0
     await RisingEdge(dut.clk)
     
+    # Enter ReadOnly to safely sample the output
     await ReadOnly()
     assert int(dut.average.value) == 100, "Initial pipeline fill failed."
-    await RisingEdge(dut.clk)
-    
+
+    # SAFELY EXIT READ-ONLY PHASE:
+    # Await the falling edge to unlock the simulator and safely drive new inputs
+    await FallingEdge(dut.clk)
+
     # Phase 2: The Edge Case. 
     # Assert flush AND valid simultaneously with a small number (16).
-    # The expected new sum is exactly 16. The expected average is 16 >> 4 = 1.
     dut.flush.value = 1
     dut.valid.value = 1
     dut.din.value = 16
+    
+    # Clock them in
     await RisingEdge(dut.clk)
 
-    # Remove signals
+    # Remove signals on the next falling edge
+    await FallingEdge(dut.clk)
     dut.flush.value = 0
     dut.valid.value = 0
+    
+    # Wait for the computation clock edge
+    await RisingEdge(dut.clk)
+    
+    # Safely sample the result
     await ReadOnly()
-
     actual_avg = int(dut.average.value)
     
     # If the bug is present, the Verilog scheduler allowed the valid block to 
@@ -64,7 +74,6 @@ def test_ma_runner():
     sim = os.getenv("SIM", "icarus")
     proj_path = Path(__file__).resolve().parent.parent
     
-    # Ensure this points to the right path for your setup
     sources = [proj_path / "sources/ma.sv"]
 
     runner = get_runner(sim)
