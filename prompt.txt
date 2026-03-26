@@ -1,13 +1,89 @@
-You are an expert Digital Design Engineer. Conduct a standard code review on the provided SystemVerilog RTL for a 16-tap Moving Average Filter present at sources/ma.sv.
+You are given an RTL module implementing a moving average filter.
 
-Design Specifications:
-- The module accepts an 8-bit input data stream (din) qualified by a valid signal.
-- It maintains a running sum of the last 16 valid samples and continuously outputs the average.
-- A synchronous flush signal is provided to immediately clear the internal accumulator and pipeline state.
-- The flush control must operate reliably under all traffic conditions, including scenarios where a flush is requested mid-stream while valid data is actively arriving.
+Your task is to review the RTL against the following specification and identify if there are any functional bugs and correct RTL according to spec.
 
-Task:
-1. Perform a thorough architectural and functional review of the RTL against the specifications.
-2. Identify any functional discrepancies, edge-case failures, or coding violations.
-3. Explain the cycle-by-cycle behavior of any identified issues.
-4. Provide the corrected Verilog code blocks if any issues are found.
+-------------------------------
+DESIGN SPECIFICATION
+-------------------------------
+
+1. Overview:
+This module implements a 16-sample moving average filter for an 8-bit input stream.
+
+2. Interface:
+
+Inputs:
+- clk : System clock
+- rst_n : Active-low asynchronous reset
+- flush : Clears internal state
+- valid : Indicates input data is valid
+- din [7:0] : Input data sample
+
+Outputs:
+- valid_out : Output validity indicator
+- average [11:0] : Moving average output
+
+3. Functional Behavior:
+
+3.1 Reset Behavior:
+When rst_n = 0:
+- sum = 0
+- average = 0
+- valid_out = 0
+- fill_count = 0
+
+3.2 Data Acceptance:
+When valid = 1:
+- Input din is accepted
+- History buffer shifts:
+  - history[0] gets new data
+  - Older samples shift toward higher indices
+
+3.3 Moving Average Calculation:
+
+The module maintains:
+- A running sum
+- A fill_count (max = 16)
+
+Case A: fill_count < 16
+- sum += din
+- fill_count increments
+- average = sum / 16
+
+Case B: fill_count = 16
+- Oldest sample (history[15]) is removed
+- sum = sum + din - history[15]
+- average = sum / 16
+
+(Note: division is implemented using >> 4)
+
+3.4 Flush Behavior:
+
+When flush = 1:
+- sum = 0
+- fill_count = 0
+- average = 0
+
+4. Output Validity:
+- valid_out follows valid
+- Output is meaningful only when valid_out = 1
+
+5. Design Expectations:
+- Moving average must reflect only valid samples
+- No stale data should affect results after reset or flush
+- Behavior must be deterministic for all input combinations
+
+6. Corner Cases:
+- Partial buffer filling
+- Full buffer operation
+- Back-to-back valid inputs
+- Flush during operation
+- Reset followed by valid input
+- Overlapping control signals
+
+-------------------------------
+TASK
+-------------------------------
+- Analyze the RTL carefully, its present in sources/ma.sv
+- Identify any functional bugs or mismatches with the specification
+- Explain the issue clearly
+- Suggest a fix if a bug is found
