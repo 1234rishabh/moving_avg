@@ -1,0 +1,18 @@
+You are an expert Digital Design Engineer. Review the provided SystemVerilog code for a Moving Average Filter located in sources/ma.sv.
+
+Design Intent:
+The module calculates a continuous 16-tap moving average of an incoming 8-bit data stream. 
+To save on high-fanout reset routing and power, the internal shift-register memory array is intentionally not tied to the reset network.
+
+Expected Behavior:
+- The accumulator should perfectly track the sum of the last 16 valid input samples.
+- The average output should reflect the division of this sum.
+- The math must never permanently corrupt or drift from the true moving average.
+
+Task:
+1. Analyze the RTL and determine if it correctly implements the intended mathematical behavior.
+2. If there is any functional issue, identify it clearly.
+3. Explain a concrete scenario where the design fails to meet the expected behavior.
+4. Provide a minimal fix to the RTL.
+
+Do not assume the design is correct. Carefully evaluate the arithmetic over time.
