@@ -1,18 +1,11 @@
-You are an expert Digital Design Engineer. Review the provided SystemVerilog code for a Moving Average Filter located in sources/ma.sv.
+You are an expert Digital Design Engineer. Review the provided SystemVerilog code for a 16-tap Moving Average Filter in sources/ma.sv
 
-Design Intent:
-The module calculates a continuous 16-tap moving average of an incoming 8-bit data stream. 
-It features a `flush` signal designed to reset the accumulator. A key requirement is the "Simultaneous Flush-and-Load": if `flush` and `valid` are asserted on the exact same clock cycle, the filter must instantly clear its history, discard the old sum, and begin a brand new moving average starting with the current `din`.
-
-Expected Behavior:
-- The accumulator should perfectly track the sum of the last 16 valid input samples.
-- The pipeline fill logic must prevent uninitialized data from corrupting the sum.
-- The simultaneous flush-and-load must work flawlessly without dropping the incoming valid data or retaining old accumulator data.
-
+Design Specifications:
+- The module accepts an 8-bit input data stream (`din`) qualified by a `valid` signal.
+- It maintains a running sum of the last 16 valid samples and continuously outputs the average.
+- A synchronous `flush` signal is provided to reset the internal accumulator and pipeline state.
 Task:
-This RTL fails dynamic simulation during edge-case control signal testing. 
-1. Identify the root cause of the failure.
-2. Explain the exact cycle-by-cycle sequence of events that triggers the flaw.
-3. Provide the minimal code correction required to fix it.
-
-Do not assume the design is correct. Carefully evaluate the Verilog scheduling and arithmetic over time.
+The provided RTL contains a functional bug that causes mathematical corruption during operation.
+1. Identify the defect in the code.
+2. Explain the scenario that triggers this failure.
+3. Provide the corrected Verilog code block.
