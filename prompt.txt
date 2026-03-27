@@ -79,7 +79,9 @@ When flush = 1:
 - Flush during operation
 - Reset followed by valid input
 - Overlapping control signals
-
+Additional Note:
+- Carefully consider behavior when multiple control signals are asserted in the same clock cycle.
+- The design should behave deterministically in such cases.
 -------------------------------
 TASK
 -------------------------------
