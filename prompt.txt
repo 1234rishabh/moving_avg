@@ -82,6 +82,9 @@ When flush = 1:
 Additional Note:
 - Carefully consider behavior when multiple control signals are asserted in the same clock cycle.
 - The design should behave deterministically in such cases.
+Debug Hint:
+- Think about the scenario where valid = 1 and flush = 1 occur simultaneously.
+- What should the expected behavior be?
 -------------------------------
 TASK
 -------------------------------
