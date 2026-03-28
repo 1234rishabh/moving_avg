@@ -1,20 +1,23 @@
-You are an expert Digital Design Engineer. Review the provided SystemVerilog code for a Moving Average File located in sources/ma.sv.
+You are an expert Digital Design Engineer. Review the provided SystemVerilog code for a Moving Average module present at sources/ma.sv.
 
 Design Intent:
 The module calculates a continuous 16-tap moving average of an incoming 8-bit data stream. 
-It features a `flush` signal designed to reset the accumulator. A key requirement is the "Simultaneous Flush-and-Load": if `flush` and `valid` are asserted on the exact same clock cycle, the filter must instantly clear its history, discard the old sum, and begin a brand new moving average starting with the current `din`.
+It includes a flush signal to reset internal state and restart accumulation.
 
 Expected Behavior:
-- The accumulator should perfectly track the sum of the last 16 valid input samples.
-- The pipeline fill logic must prevent uninitialized data from corrupting the sum.
-- The simultaneous flush-and-load must work flawlessly without dropping the incoming valid data or retaining old accumulator data.
+- The accumulator should track the sum of the most recent 16 valid input samples.
+- During initial filling, only valid samples should contribute to the sum.
+- After a reset or flush, no stale data should influence future outputs.
+- The design must behave correctly under all combinations of control signals.
 
 Task:
-This RTL fails dynamic simulation during edge-case control signal testing. 
-1. Identify the root cause of the failure.
-2. Explain the exact cycle-by-cycle sequence of events that triggers the flaw.
-3. Provide the minimal code correction required to fix it.
+The RTL fails in certain scenarios during simulation.
 
-Do not assume the design is correct. Carefully evaluate the Verilog scheduling and arithmetic over time.
+1. Identify if there is a functional bug in the design.
+2. Explain the issue clearly if found.
+3. Suggest a minimal fix.
 
-
+Instructions:
+- Do not assume the design is correct.
+- Pay attention to how control signals interact with data updates.
+- Focus on correctness over multiple clock cycles.
