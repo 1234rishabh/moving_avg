@@ -1,18 +1,30 @@
-You are an expert Digital Design Engineer. Review the provided SystemVerilog code for a Moving Average File located in sources/ma.sv.
+
+You will be working on a task for example-verilog-codebase.
+The repository has already been cloned in the environment in /home/ubuntu/example-verilog-codebase.
+Iverilog and Verilator have been installed.
+Do not change any of the input or output ports of the modules.
+
+You should write verilog testbenches to test your code and ensure it matches the functional specification (in addition to syntactic correctness).
+
+Use the tools provided to complete the following task:
+
+You are an expert Digital Design Engineer. Review the provided SystemVerilog code for a Moving Average Filter located in sources/ma.sv.
 
 Design Intent:
 The module calculates a continuous 16-tap moving average of an incoming 8-bit data stream. 
-To save on high-fanout reset routing and power, the internal shift-register memory array is intentionally not tied to the reset network.
+It features a `flush` signal designed to reset the accumulator. A key requirement is the "Simultaneous Flush-and-Load": if `flush` and `valid` are asserted on the exact same clock cycle, the filter must instantly clear its history, discard the old sum, and begin a brand new moving average starting with the current `din`.
 
 Expected Behavior:
 - The accumulator should perfectly track the sum of the last 16 valid input samples.
-- The average output should reflect the division of this sum.
-- The math must never permanently corrupt or drift from the true moving average.
+- The pipeline fill logic must prevent uninitialized data from corrupting the sum.
+- The simultaneous flush-and-load must work flawlessly without dropping the incoming valid data or retaining old accumulator data.
 
 Task:
-1. Analyze the RTL and determine if it correctly implements the intended mathematical behavior.
-2. If there is any functional issue, identify it clearly.
-3. Explain a concrete scenario where the design fails to meet the expected behavior.
-4. Provide a minimal fix to the RTL.
+This RTL fails dynamic simulation during edge-case control signal testing. 
+1. Identify the root cause of the failure.
+2. Explain the exact cycle-by-cycle sequence of events that triggers the flaw.
+3. Provide the minimal code correction required to fix it.
 
-Do not assume the design is correct. Carefully evaluate the arithmetic over time.
+Do not assume the design is correct. Carefully evaluate the Verilog scheduling and arithmetic over time.
+
+
