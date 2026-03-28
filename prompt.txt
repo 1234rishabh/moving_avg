@@ -1,96 +1,18 @@
-You are given an RTL module implementing a moving average filter.
+You are an expert Digital Design Engineer. Review the provided SystemVerilog code for a Moving Average File located in sources/ma.sv.
 
-Your task is to review the RTL against the following specification and identify if there are any functional bugs and correct RTL according to spec.
+Design Intent:
+The module calculates a continuous 16-tap moving average of an incoming 8-bit data stream. 
+To save on high-fanout reset routing and power, the internal shift-register memory array is intentionally not tied to the reset network.
 
--------------------------------
-DESIGN SPECIFICATION
--------------------------------
+Expected Behavior:
+- The accumulator should perfectly track the sum of the last 16 valid input samples.
+- The average output should reflect the division of this sum.
+- The math must never permanently corrupt or drift from the true moving average.
 
-1. Overview:
-This module implements a 16-sample moving average filter for an 8-bit input stream.
+Task:
+1. Analyze the RTL and determine if it correctly implements the intended mathematical behavior.
+2. If there is any functional issue, identify it clearly.
+3. Explain a concrete scenario where the design fails to meet the expected behavior.
+4. Provide a minimal fix to the RTL.
 
-2. Interface:
-
-Inputs:
-- clk : System clock
-- rst_n : Active-low asynchronous reset
-- flush : Clears internal state
-- valid : Indicates input data is valid
-- din [7:0] : Input data sample
-
-Outputs:
-- valid_out : Output validity indicator
-- average [11:0] : Moving average output
-
-3. Functional Behavior:
-
-3.1 Reset Behavior:
-When rst_n = 0:
-- sum = 0
-- average = 0
-- valid_out = 0
-- fill_count = 0
-
-3.2 Data Acceptance:
-When valid = 1:
-- Input din is accepted
-- History buffer shifts:
-  - history[0] gets new data
-  - Older samples shift toward higher indices
-
-3.3 Moving Average Calculation:
-
-The module maintains:
-- A running sum
-- A fill_count (max = 16)
-
-Case A: fill_count < 16
-- sum += din
-- fill_count increments
-- average = sum / 16
-
-Case B: fill_count = 16
-- Oldest sample (history[15]) is removed
-- sum = sum + din - history[15]
-- average = sum / 16
-
-(Note: division is implemented using >> 4)
-
-3.4 Flush Behavior:
-
-When flush = 1:
-- sum = 0
-- fill_count = 0
-- average = 0
-
-4. Output Validity:
-- valid_out follows valid
-- Output is meaningful only when valid_out = 1
-
-5. Design Expectations:
-- Moving average must reflect only valid samples
-- No stale data should affect results after reset or flush
-- Behavior must be deterministic for all input combinations
-
-6. Corner Cases:
-- Partial buffer filling
-- Full buffer operation
-- Back-to-back valid inputs
-- Flush during operation
-- Reset followed by valid input
-- Overlapping control signals
-Additional Note:
-- Carefully consider behavior when multiple control signals are asserted in the same clock cycle.
-- The design should behave deterministically in such cases.
-Debug Hint:
-- Think about the scenario where valid = 1 and flush = 1 occur simultaneously.
-- What should the expected behavior be?
-Additional Hint:
-- Check whether the RTL defines a clear priority between operations when multiple conditions are true.
--------------------------------
-TASK
--------------------------------
-- Analyze the RTL carefully, its present in sources/ma.sv
-- Identify any functional bugs or mismatches with the specification
-- Explain the issue clearly
-- Suggest a fix if a bug is found
+Do not assume the design is correct. Carefully evaluate the arithmetic over time.
