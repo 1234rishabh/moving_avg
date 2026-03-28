@@ -85,6 +85,8 @@ Additional Note:
 Debug Hint:
 - Think about the scenario where valid = 1 and flush = 1 occur simultaneously.
 - What should the expected behavior be?
+Additional Hint:
+- Check whether the RTL defines a clear priority between operations when multiple conditions are true.
 -------------------------------
 TASK
 -------------------------------
