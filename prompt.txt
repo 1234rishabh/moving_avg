@@ -1,14 +1,4 @@
-
-You will be working on a task for example-verilog-codebase.
-The repository has already been cloned in the environment in /home/ubuntu/example-verilog-codebase.
-Iverilog and Verilator have been installed.
-Do not change any of the input or output ports of the modules.
-
-You should write verilog testbenches to test your code and ensure it matches the functional specification (in addition to syntactic correctness).
-
-Use the tools provided to complete the following task:
-
-You are an expert Digital Design Engineer. Review the provided SystemVerilog code for a Moving Average Filter located in sources/ma.sv.
+You are an expert Digital Design Engineer. Review the provided SystemVerilog code for a Moving Average File located in sources/ma.sv.
 
 Design Intent:
 The module calculates a continuous 16-tap moving average of an incoming 8-bit data stream. 
@@ -26,5 +16,3 @@ This RTL fails dynamic simulation during edge-case control signal testing.
 3. Provide the minimal code correction required to fix it.
 
 Do not assume the design is correct. Carefully evaluate the Verilog scheduling and arithmetic over time.
-
-
