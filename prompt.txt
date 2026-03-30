@@ -1,23 +1,25 @@
-You are an expert Digital Design Engineer. Review the provided SystemVerilog code for a Moving Average module present at sources/ma.sv.
+You are an expert Digital Design Engineer. Review the provided SystemVerilog code for a Moving Average module in sources/ma.sv.
 
 Design Intent:
-The module calculates a continuous 16-tap moving average of an incoming 8-bit data stream. 
-It includes a flush signal to reset internal state and restart accumulation.
+The module computes a continuous 16-tap moving average of an incoming 8-bit data stream. 
+It maintains a history of the most recent samples and a running sum to efficiently calculate the average.
 
 Expected Behavior:
-- The accumulator should track the sum of the most recent 16 valid input samples.
-- During initial filling, only valid samples should contribute to the sum.
-- After a reset or flush, no stale data should influence future outputs.
-- The design must behave correctly under all combinations of control signals.
+- The accumulator must always reflect the sum of the most recent valid input samples (up to 16).
+- During initial operation, only received valid samples should contribute to the sum.
+- The flush signal resets the internal state (sum, counters, and output) and restarts accumulation.
+- After a flush, no data from before the flush should influence future outputs.
+- If flush and valid are asserted in the same clock cycle, the design must restart accumulation using the current input sample as the first valid entry, ensuring no mixing of old and new state.
+- The design must behave deterministically for all combinations of control signals without causing inconsistent or partially updated internal state.
 
 Task:
 The RTL fails in certain scenarios during simulation.
 
 1. Identify if there is a functional bug in the design.
-2. Explain the issue clearly if found.
-3. Suggest a minimal fix.
+2. Explain the root cause of the issue clearly.
+3. Suggest a minimal fix to correct the behavior.
 
 Instructions:
 - Do not assume the design is correct.
-- Pay attention to how control signals interact with data updates.
-- Focus on correctness over multiple clock cycles.
+- Pay attention to how control signals interact with sequential state updates.
+- Focus on correctness across clock cycles.
