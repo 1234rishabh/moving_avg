@@ -11,6 +11,7 @@ Expected Behavior:
 - After a flush, no data from before the flush should influence future outputs.
 - When multiple control signals are asserted in the same clock cycle, the design must produce a deterministic and well-defined result.
 - Under all input conditions, the internal state must remain consistent and free from partial updates or unintended mixing of old and new data.
+- After a flush, if a valid input is present in the same cycle, the design must begin accumulation in a clean state without losing the new input sample.
 
 Task:
 The RTL fails in certain scenarios during simulation.
